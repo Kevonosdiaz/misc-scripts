@@ -10,7 +10,7 @@ _ = parser.add_argument('links', type=str, nargs='+')
 _ = parser.add_argument('-d', '--dest', type=Path, default="~/Music/Albums")
 
 args = parser.parse_args()
-dest: Path = args.dest
+dest: Path = args.dest.expanduser()
 
 for l in args.links:
     dl_album(l, dest)

@@ -54,7 +54,7 @@ def dl_album(link: str, dest: Path):
     for p in Path.cwd().iterdir():
         if p.is_file() and p.suffix.lower() in music_suffixes:
             _ = shutil.move(p, new_dest / p.name)
-            moved.append(str(p))
+            moved.append(str(p.name))
 
     print(f'Moved the following files to {new_dest}:\n{"\n".join(moved)}')
 
