@@ -32,16 +32,15 @@ def dl_album(link: str, dest: Path):
 
     # Run yt-dlp on provided link (expected to be a playlist) and try to get
     # playlist name from the output
-    proc = subprocess.run(ytdlp_args,
-                          capture_output=True,
-                          text=True,
-                          timeout=300)
+    proc = subprocess.run(ytdlp_args, capture_output=True, text=True)
     # [download] Downloading playlist: 15
     m = re.search(r"Downloading playlist: (.*)", proc.stdout, re.MULTILINE)
     if not m:
         raise ValueError(
             f"Could not find playlist name in output!\nOutput:\n{proc.stdout}")
-    album_name = m.group(1)
+
+    # Replace ':' for Android filesystem
+    album_name = m.group(1).replace(":", "_")
 
     # Make directory based on album name and move all music files in cwd to it
     new_dest = dest / album_name
@@ -53,8 +52,9 @@ def dl_album(link: str, dest: Path):
     moved: list[str] = []
     for p in Path.cwd().iterdir():
         if p.is_file() and p.suffix.lower() in music_suffixes:
-            _ = shutil.move(p, new_dest / p.name)
-            moved.append(str(p.name))
+            new_name = p.name.replace(":", "_")
+            _ = shutil.move(p, new_dest / new_name)
+            moved.append(new_name)
 
     print(f'Moved the following files to {new_dest}:\n{"\n".join(moved)}')
 
