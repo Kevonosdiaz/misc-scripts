@@ -22,7 +22,7 @@ def main():
 
 
 # Downloads playlist from link and move files to dest/{playlist_name}
-def dl_album(link: str, dest: Path):
+def dl_album(link: str, dest: Path) -> str:
     ytdlp_args = [
         'yt-dlp', '-x', '--audio-quality', '0', '--no-keep-video',
         '--embed-thumbnail', '--embed-metadata', '-o', "'%(title)s'", link
@@ -57,6 +57,7 @@ def dl_album(link: str, dest: Path):
             moved.append(new_name)
 
     print(f'Moved the following files to {new_dest}:\n{"\n".join(moved)}')
+    return str(new_dest)
 
 
 if __name__ == "__main__":
